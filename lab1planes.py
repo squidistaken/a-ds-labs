@@ -36,14 +36,46 @@ def main():
 
 
 def work():
+
+    def deqeueRunway():
+        while True:
+            if runway.size() == 0:
+                break
+            results.append(runway.dequeue())
+
+    def popHanger():
+        while True:
+            if hanger.size() == 0:
+                break
+            results.append(hanger.pop())
+
     flights = main()
     results = []
 
     runway = Queue()
     hanger = Stack()
 
-    for flight in main():
-        break
+    for flight in flights:
+
+        if flight[2] == "yes":
+            hanger.push(flight)
+        else:
+            runway.enqueue(flight)
+
+        if runway.size() == RUNWAY_LENGTH:
+            #Too lazy to think it though. Might need to add a -1 to runway length
+            while True:
+                if runway.size() == 0:
+                    break
+                results.append(runway.dequeue())
+
+        if hanger.size() == HANGAR_SIZE:
+
+            deqeueRunway()
+            popHanger()
+
+    deqeueRunway()
+    popHanger()
 
 
 """
