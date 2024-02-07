@@ -6,7 +6,6 @@ Description:
 
 """
 
-
 from queue import Queue
 from stack import Stack
 
@@ -16,8 +15,8 @@ HANGAR_SIZE = 5
 
 def main():
     """
-    Where the magic happens
-    :return: list of tuples (aircraft_name,
+    just getting the input
+    :return: list of tuples (aircraft_name, checkup)
     """
 
     temp = []
@@ -36,14 +35,25 @@ def main():
 
 
 def work():
-
-    def deqeueRunway():
+    """
+    This is where the magic happens.
+    :return: NA
+    """
+    def deqeue_runway():
+        """
+        helper function to clear the runway and send the planes to results
+        :return:
+        """
         while True:
             if runway.size() == 0:
                 break
             results.append(runway.dequeue())
 
-    def popHanger():
+    def pop_hanger():
+        """
+        helper function to clear the hangar and send planes to results
+        :return:
+        """
         while True:
             if hanger.size() == 0:
                 break
@@ -57,25 +67,36 @@ def work():
 
     for flight in flights:
 
-        if flight[2] == "yes":
+        if flight[1] == "yes":
             hanger.push(flight)
         else:
             runway.enqueue(flight)
 
         if runway.size() == RUNWAY_LENGTH:
-            #Too lazy to think it though. Might need to add a -1 to runway length
+            # Too lazy to think it though. Might need to add a -1 to runway length
             while True:
                 if runway.size() == 0:
                     break
                 results.append(runway.dequeue())
 
         if hanger.size() == HANGAR_SIZE:
+            deqeue_runway()
+            pop_hanger()
 
-            deqeueRunway()
-            popHanger()
+    deqeue_runway()
+    pop_hanger()
 
-    deqeueRunway()
-    popHanger()
+    print_results(results)
+
+
+def print_results(flights: list):
+    """
+    Simply a print function for the results list
+    :param flights: the list of departure planes
+    :return: NA
+    """
+    for flight in flights:
+        print(flight[0])
 
 
 """
@@ -102,4 +123,4 @@ GAME PLAN:
 * --> you can skip the last step and change the second one to simply make all planes depart...
 """
 
-main()
+work()
