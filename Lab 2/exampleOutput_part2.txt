@@ -1,0 +1,18 @@
+give an equation: this is an equation in 1 variable of degree 1
+solution: 3.000
+
+give an equation: this is an equation in 1 variable of degree 1
+solution: -0.333
+
+give an equation: this is an equation in 1 variable of degree 1
+solution: 0.000
+
+give an equation: this is an equation in 1 variable of degree 2
+
+give an equation: this is not an equation
+
+give an equation: this is not an equation
+
+give an equation: this is not an equation
+
+give an equation: good bye

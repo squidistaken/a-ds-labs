@@ -1,0 +1,21 @@
+give an equation: this is an equation in 1 variable of degree 3
+
+give an equation: this is an equation in 1 variable of degree 1
+
+give an equation: this is an equation, but not in 1 variable
+
+give an equation: this is an equation in 1 variable of degree 1
+
+give an equation: this is not an equation
+
+give an equation: this is not an equation
+
+give an equation: this is not an equation
+
+give an equation: this is not an equation
+
+give an equation: this is not an equation
+
+give an equation: this is not an equation
+
+give an equation: good bye
