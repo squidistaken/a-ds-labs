@@ -35,7 +35,13 @@ def get_degree(tokenlist: TokenList) -> int:
     :param tokenlist: input token list
     :return: the highest exponent in the token list
     """
-    return -1
+    degree = 1
+    equation = tokenlist.__str__()
+    for i in range(len(equation) - 1):
+        if equation[i] == "^":
+            prev = int(equation[i + 2])
+            degree = max(degree, prev)
+    return degree
 
 
 def is_single_variable_equation(tokenlist: TokenList) -> bool:
@@ -44,4 +50,11 @@ def is_single_variable_equation(tokenlist: TokenList) -> bool:
     :param tokenlist: input token list
     :return: True iff the token list contains exactly one identifier
     """
+    equation = tokenlist.__str__().split()
+    comparisons = []
+    for i in equation:
+        if i.isalpha() and i not in comparisons:
+            comparisons.append(i)
+    if len(comparisons) == 1:
+        return True
     return False
