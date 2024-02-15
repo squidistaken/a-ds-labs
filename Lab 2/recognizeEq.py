@@ -63,6 +63,7 @@ def _accept_exponent(position: TokenListPosition) -> bool:
     return _accept_number(position)
 
 
+# TODO: Debug _accept_term
 def _accept_term(position: TokenListPosition) -> bool:
     """
     Reads a maximal term off the token list, if it exists
@@ -77,6 +78,7 @@ def _accept_term(position: TokenListPosition) -> bool:
             if not _accept_symbol(position, "^") and not _accept_number(position):
                 return False
 
+    # '^' <nat>
     while _accept_symbol(position, "^"):
         if not _accept_exponent(position):
             return False
@@ -95,17 +97,20 @@ def _accept_expression(position: TokenListPosition) -> bool:
     if not _accept_symbol(position, "-"):
         if not _accept_term(position):
             return False
+
+    # {'+' <term> | '-' <term>}
     while _accept_symbol(position, "+") or _accept_symbol(position, "-"):
         if not _accept_term(position):
             return False
+
     return True
 
 
 def _accept_equation(position: TokenListPosition) -> bool:
     # <equation> ::= <expression> '=' <expression>
-    while _accept_expression(position) or _accept_symbol(position, "="):
-        if not _accept_expression(position):
-            return False
+
+    while _accept_expression(position):
+        pass
     return True
 
 
@@ -119,15 +124,25 @@ def recognize_equation(tokenlist: TokenList) -> bool:
     return _accept_equation(position) and position.tokens is None
 
 
+# TODO: Debug get_degree
 def get_degree(tokenlist: TokenList) -> int:
     """
     Determines the highest exponent in a token list
     :param tokenlist: input token list
     :return: the highest exponent in the token list
     """
-    return -1
+    position = TokenListPosition(tokenlist)
+    total = 1
+    degree = 1
+    while not _accept_symbol(position, "^"):
+        position.tokens = position.tokens._next
+    while _accept_number(position):
+        degree += _accept_number(position)
+        total = max(total, degree)
+    return total
 
 
+# TODO: Debug is_single_variable_equation
 def is_single_variable_equation(tokenlist: TokenList) -> bool:
     """
     Determines whether a token list contains exactly one identifier
