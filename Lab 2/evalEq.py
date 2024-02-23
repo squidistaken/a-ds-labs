@@ -136,7 +136,7 @@ def _value_equation(status: TokenListEvaluation) -> bool:
     status.switch_operations = True
     if not _value_expression(status):
         return False
-    if status.identifier == 0 or status.natural == 0:
+    if status.identifier == 0:
         return False
     status.equation_value = -status.natural / status.identifier
     return True
