@@ -64,10 +64,10 @@ def _value_term(status: TokenListEvaluation) -> bool:
         if _accept_symbol(status, "^"):
             if _value_number(status):
                 if status.temp == 0:
-                    status.temp = 1
+                    status.temp = value
                     status.is_natural = True
                 else:
-                    value **= status.temp
+                    status.temp = value
             else:
                 return False
         else:
