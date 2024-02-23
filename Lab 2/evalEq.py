@@ -47,12 +47,13 @@ def _value_term(status: TokenListEvaluation) -> bool:
     """
     # <term> ::= <nat> | [<nat>] <identifier> ['^' <nat>]
 
+    # Value is saved in status.temp inside the _value_number function
     if _value_number(status):
-        if not _accept_identifier(status):
-            status.is_natural = True
-        else:
+        if _accept_identifier(status):
             status.is_natural = False
-    if _accept_identifier(status):
+        else:
+            status.is_natural = True
+    elif _accept_identifier(status):
         status.temp = 1
         status.is_natural = False
 
@@ -62,15 +63,18 @@ def _value_term(status: TokenListEvaluation) -> bool:
     while status.tokens is not None:
         if _accept_symbol(status, "^"):
             if _value_number(status):
-                if status.temp != 0:
+                if status.temp == 0:
+                    status.temp = 1
+                    status.is_natural = True
+                else:
                     value **= status.temp
             else:
                 return False
         else:
-            status.temp = value
+            # status.temp = value
             return True
     # If there are no more * or /, the term is finished
-    status.temp = value
+    # status.temp = value
     return True
 
 
@@ -84,10 +88,10 @@ def _value_expression(status: TokenListEvaluation) -> bool:
 
     # [-] <term>
     if _accept_symbol(status, "-"):
-        if not _value_term(status):
-            return False
-        else:
+        if _value_term(status):
             status.temp = -status.temp
+        else:
+            return False
     if _value_term(status):
         status.temp = status.temp
 
@@ -100,17 +104,29 @@ def _value_expression(status: TokenListEvaluation) -> bool:
         if _accept_symbol(status, "+"):
             if _value_term(status):
                 if status.is_natural:
-                    status.natural += status.temp if not status.switch_operations else - status.temp
+                    if status.switch_operations:
+                        status.natural -= status.temp
+                    else:
+                        status.natural += status.temp
                 else:
-                    status.identifier += status.temp if not status.switch_operations else - status.temp
+                    if status.switch_operations:
+                        status.identifier -= status.temp
+                    else:
+                        status.identifier += status.temp
             else:
                 return False
         elif _accept_symbol(status, "-"):
             if _value_term(status):
                 if status.is_natural:
-                    status.natural -= status.temp if not status.switch_operations else + status.temp
+                    if status.switch_operations:
+                        status.natural += status.temp
+                    else:
+                        status.natural -= status.temp
                 else:
-                    status.identifier -= status.temp if not status.switch_operations else + status.temp
+                    if status.switch_operations:
+                        status.identifier += status.temp
+                    else:
+                        status.identifier -= status.temp
             else:
                 return False
         else:
@@ -123,7 +139,7 @@ def _value_expression(status: TokenListEvaluation) -> bool:
 
 def _value_equation(status: TokenListEvaluation) -> bool:
     """
-    Records the value of the equation, if it it exists
+    Records the value of the equation, if it exists
     :param position: pointer to a token list node evaluation
     :return: True iff an expression has been read off the token list
     """
@@ -152,5 +168,7 @@ def evaluate_equation(tokenlist: TokenList):
     """
     status = TokenListEvaluation(tokenlist)
     if _value_equation(status) and status.tokens is None:
+        if -0.000 >= status.equation_value >= -0.0005:
+            status.equation_value = 0
         return f"solution: {'%.3f' % status.equation_value}"
     return "not solvable"
