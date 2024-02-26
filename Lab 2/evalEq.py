@@ -54,10 +54,10 @@ def _value_term(status: TokenListEvaluation) -> bool:
         else:
             status.is_natural = True
     elif _accept_identifier(status):
+        # Account if there is just an "x"
         status.temp = 1
         status.is_natural = False
 
-    # Account if there is just an "x"
     value = status.temp
 
     while status.tokens is not None:
@@ -71,10 +71,8 @@ def _value_term(status: TokenListEvaluation) -> bool:
             else:
                 return False
         else:
-            # status.temp = value
             return True
-    # If there are no more * or /, the term is finished
-    # status.temp = value
+    # If there is no more ^, the term is finished
     return True
 
 
