@@ -8,10 +8,11 @@ while expression == "" or expression[0] != "!":
         if not is_single_variable_equation(tokenlist):
             print("this is an equation, but not in 1 variable")
         else:
-            print("this is an equation in 1 variable of degree", get_degree(tokenlist))
-            if get_degree(tokenlist) == 1:
-                print("solution:", evaluate_equation(tokenlist))
+            degree = get_degree(tokenlist)
+            print("this is an equation in 1 variable of degree", degree)
+            if degree == 1:
+                print(evaluate_equation(tokenlist))
     else:
         print("this is not an equation")
-    expression = input("\ngive an equation:")
+    expression = input("\ngive an equation: ")
 print("good bye")
