@@ -5,8 +5,6 @@ class TrieNode:
 
     def __init__(self):
         self.children: dict[str | None, TrieNode] = dict()
-        # Indicating if the character is an ending for the word.
-        self.is_end: bool = False
 
 
 class StandardTrie:
@@ -28,7 +26,7 @@ class StandardTrie:
             trie_depth = trie_depth.children[char]
 
         # Making sure there is an ending None node
-        trie_depth.is_end = True
+        trie_depth.children[None] = TrieNode()
 
     def word_exists(self, word: str) -> bool:
         """
@@ -44,4 +42,5 @@ class StandardTrie:
             # Moving downwards
             trie_depth = trie_depth.children[char]
 
-        return True if trie_depth.is_end else False
+        # Validate if the character is the ending.
+        return True if trie_depth.children.get(None) else False
