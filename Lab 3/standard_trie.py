@@ -1,3 +1,14 @@
+"""
+File: standard_trie.py
+Authors:
+    Marcus Persson (m.h.o.persson@student.rug.nl),
+    Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
+
+Description:
+    A custom class for standard tries.
+"""
+
+
 class TrieNode:
     """
     Represents a standard trie node.
@@ -16,6 +27,10 @@ class StandardTrie:
         self.root = TrieNode()
 
     def insert_word(self, word: str) -> None:
+        """
+        Inserts a word into the trie.
+        :param word: Word to insert in the trie.
+        """
         trie_depth = self.root
 
         for char in word:
@@ -30,8 +45,9 @@ class StandardTrie:
 
     def word_exists(self, word: str) -> bool:
         """
-        Inserts a word into the trie.
-        :param P: Word to insert in the trie.
+        Checks if the word exists in the trie.
+        :param word: Word to check in the trie.
+        :return: True if the word exists in the trie, otherwise False.
         """
         trie_depth = self.root
 

@@ -7,7 +7,7 @@ Authors:
 Description:
     A spell checker, created using a standard trie.
 """
-from standardtrie import *
+from standard_trie import *
 
 # Step 1: Create the dictionary
 allowed_words = StandardTrie()
