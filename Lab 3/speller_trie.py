@@ -7,23 +7,30 @@ Authors:
 Description:
     A spell checker, created using a standard trie.
 """
+from standardtrie import *
 
-# Step 1: read in the dictionary
-allowed_words = []
+# Step 1: Create the dictionary
+allowed_words = StandardTrie()
+
 word = input()
 while word != "!":
-    allowed_words.append(word)
+    allowed_words.insert_word(word)
     word = input()
 
-
-# Step 2: check words
-class TrieNode:
-    def __init__(self):
-        self.children: dict[str | None, TrieNode] = dict()
-
-
-word = input()
+# Step 2: Validate if words exist in a given input.
+# Handle non-alpha characters.
+splitters = [".", ",", "\'", "’", "/", "-", "\"", ":", ";", "?", "!", "(", ")"]
 unknown_word_count = 0
 
-# Step 3: Generate output
+word = input()
+while word != "":
+    for splitter in splitters:
+        word = " ".join(word.lower().split(splitter))
+    for w in word.split():
+        if not allowed_words.word_exists(w):
+            print(w)
+            unknown_word_count += 1
+    word = input()
+
+# Step 3: Generate output.
 print("There are", unknown_word_count, "unknown words.")
