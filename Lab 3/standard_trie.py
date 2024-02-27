@@ -35,7 +35,8 @@ class StandardTrie:
 
         for char in word:
             if trie_depth.children.get(char) is None:
-                # If the character is not present at the current trie depth, we create a node.
+                # If the character is not present at the current trie depth,
+                # we create a node
                 trie_depth.children[char] = TrieNode()
             # Moving downwards
             trie_depth = trie_depth.children[char]
@@ -53,10 +54,11 @@ class StandardTrie:
 
         for char in word:
             if trie_depth.children.get(char) is None:
-                # If the character does not exist at that depth, return False
+                # If the character does not exist at that depth,
+                # return False
                 return False
             # Moving downwards
             trie_depth = trie_depth.children[char]
 
-        # Validate if the character is the ending.
+        # Validate if the character is the ending
         return True if trie_depth.children.get(None) else False
