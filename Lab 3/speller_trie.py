@@ -37,4 +37,4 @@ while word != "":
 print("There are", unknown_word_count, "unknown words.")
 
 word = input()
-print(allowed_words.remove_term(word))
+print(allowed_words.remove(word))
