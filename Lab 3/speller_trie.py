@@ -35,6 +35,3 @@ while word != "":
 
 # Step 3: Generate output.
 print("There are", unknown_word_count, "unknown words.")
-
-word = input()
-print(allowed_words.remove(word))

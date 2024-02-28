@@ -34,7 +34,7 @@ class StandardTrie:
         trie_depth = self.root
 
         for char in term:
-            if trie_depth.children.get(char) is None:
+            if not trie_depth.children.get(char):
                 # If the character is not present at the current trie depth,
                 # we create a node
                 trie_depth.children[char] = TrieNode()
@@ -55,11 +55,14 @@ class StandardTrie:
 
         # Iterating down the trie.
         for char in term:
-            if trie_depth.children.get(char) is None:
+            if not trie_depth.children.get(char):
                 # If there is no such term,
                 return "No such term exists in the trie."
             parents.insert(0, trie_depth)
             trie_depth = trie_depth.children[char]
+
+        if not trie_depth.children.get(None):
+            return "No such term exists in the trie."
 
         trie_depth.children.pop(None)
 
@@ -84,7 +87,7 @@ class StandardTrie:
         trie_depth = self.root
 
         for char in term:
-            if trie_depth.children.get(char) is None:
+            if not trie_depth.children.get(char):
                 # If the character does not exist at that depth,
                 # return False
                 return False
