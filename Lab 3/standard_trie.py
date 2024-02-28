@@ -26,9 +26,6 @@ class StandardTrie:
     def __init__(self):
         self.root = TrieNode()
 
-    def _no_word_exists(self) -> str:
-        return "No such word exists in the trie."
-
     def insert(self, term: str) -> None:
         """
         Inserts a term into the trie.
@@ -59,8 +56,8 @@ class StandardTrie:
         # Iterating down the trie.
         for char in term:
             if trie_depth.children.get(char) is None:
-                # If there is no such word,
-                return self._no_word_exists()
+                # If there is no such term,
+                return "No such term exists in the trie."
             parents.insert(0, trie_depth)
             trie_depth = trie_depth.children[char]
 
@@ -70,7 +67,7 @@ class StandardTrie:
         # Iterating back up
         for parent in parents:
             if trie_depth.children.get(None):
-                # If the word iterates back up to a pre-existing word,
+                # If the term iterates back up to a pre-existing term,
                 # end the function
                 return term
             trie_depth = parent
