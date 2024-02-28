@@ -50,19 +50,15 @@ class StandardTrie:
         :param term: Term to remove from the trie.
         :return: The removed term, if it exists.
         """
+        if not self.term_exists(term):
+            return "No such term exists in the trie."
         trie_depth = self.root
         parents = []
 
         # Iterating down the trie.
         for char in term:
-            if not trie_depth.children.get(char):
-                # If there is no such term,
-                return "No such term exists in the trie."
             parents.insert(0, trie_depth)
             trie_depth = trie_depth.children[char]
-
-        if not trie_depth.children.get(None):
-            return "No such term exists in the trie."
 
         trie_depth.children.pop(None)
 
