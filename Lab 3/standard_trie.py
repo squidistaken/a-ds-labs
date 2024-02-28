@@ -26,10 +26,13 @@ class StandardTrie:
     def __init__(self):
         self.root = TrieNode()
 
-    def insert_word(self, word: str) -> None:
+    def _no_word_exists(self) -> str:
+        return "No such word exists in the trie."
+
+    def insert(self, word: str) -> None:
         """
-        Inserts a word into the trie.
-        :param word: Word to insert in the trie.
+        Inserts a term into the trie.
+        :param word: Term to insert in the trie.
         """
         trie_depth = self.root
 
@@ -44,11 +47,41 @@ class StandardTrie:
         # Making sure there is an ending None node
         trie_depth.children[None] = TrieNode()
 
-    def word_exists(self, word: str) -> bool:
+    def remove_term(self, word: str) -> str:
         """
-        Checks if the word exists in the trie.
-        :param word: Word to check in the trie.
-        :return: True if the word exists in the trie, otherwise False.
+        Returns and removes a term from the trie.
+        :param word: Term to remove from the trie.
+        :return: The removed term, if it exists.
+        """
+        trie_depth = self.root
+        parents = []
+
+        # Iterating down the trie.
+        for char in word:
+            if trie_depth.children.get(char) is None:
+                # If there is no such word,
+                return self._no_word_exists()
+            parents.insert(0, trie_depth)
+            trie_depth = trie_depth.children[char]
+
+        trie_depth.children.pop(None)
+
+        reference = [*word]
+        for parent in parents:
+            if trie_depth.children.get(None):
+                # If the word iterates back up to a pre-existing word,
+                # end the function
+                return word
+            trie_depth = parent
+            trie_depth.children.pop(reference[-1])
+            reference.pop(-1)
+        return word
+
+    def term_exists(self, word: str) -> bool:
+        """
+        Checks if a term exists in the trie.
+        :param word: Term to check in the trie.
+        :return: True if the term exists in the trie, otherwise False.
         """
         trie_depth = self.root
 
