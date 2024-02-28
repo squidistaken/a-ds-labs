@@ -67,6 +67,7 @@ class StandardTrie:
         trie_depth.children.pop(None)
 
         reference = [*word]
+        # Iterating back up
         for parent in parents:
             if trie_depth.children.get(None):
                 # If the word iterates back up to a pre-existing word,
