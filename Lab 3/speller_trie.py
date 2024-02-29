@@ -19,8 +19,10 @@ while word != "!":
 
 # Step 2: Validate if words exist in a given input.
 # Handle non-alphabetical characters.
-splitters = [".", ",", "\'", "’", "/", "-", "\"", ":", ";", "?", "!", "(", ")",
-             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+splitters = [".", ",", "\'", "’", "/", "-", "\"", ":", ";", "?",
+             "!", "(", ")", "1", "2", "3", "4", "5", "6", "7", "8",
+             "9", "0"]
+
 unknown_word_count = 0
 
 word = input()
