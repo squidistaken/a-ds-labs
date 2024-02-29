@@ -30,7 +30,5 @@ while word != "":
             unknown_word_count += 1
     word = input()
 
-# TODO: Replace the above while loop with a correct solution.
-
 # Step 3: Generate output
 print("There are", unknown_word_count, "unknown words.")
