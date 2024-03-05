@@ -12,7 +12,7 @@ def is_operator(char: str) -> bool:
     return len(char) == 1 and char in "+-/*"
 
 
-def _tree_node(text: str, pos: int) -> tuple[TreeNode|None, int]:
+def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
     while pos < len(text) and text[pos].isspace():
         pos += 1
     if pos >= len(text):
@@ -37,8 +37,39 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode|None, int]:
     return new_node, pos
 
 
-def generate_expression_tree(text: str) -> TreeNode|None:
+def _prefix_tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
+
+    # fix this up - from chatGPT
+
+    while pos < len(text) and text[pos].isspace():
+        pos += 1
+    if pos >= len(text):
+        return None, pos
+    if text[pos] in "+-*/":  # Assuming these are your operators
+        # It's an operator, so create a node for the operator
+        symbol, pos = _match_symbol(text, pos)
+        new_node = TreeNode(Token(TokenType.SYMBOL, symbol))
+        # Recursively get the left and right operands
+        new_node._left, pos = _tree_node(text, pos)
+        new_node._right, pos = _tree_node(text, pos)
+    elif "0" <= text[pos] <= "9":
+        # A digit signals the start of a number
+        value, pos = _match_number(text, pos)
+        new_node = TreeNode(Token(TokenType.NUMBER, value))
+    elif text[pos].isalpha():
+        # An alphabetic character signals an identifier
+        identifier, pos = _match_identifier(text, pos)
+        new_node = TreeNode(Token(TokenType.IDENTIFIER, identifier))
+        # Check if the operator does not have both operands, which is an error in this context
+    if new_node is not None and isinstance(new_node._item, Token) and new_node._item.type == TokenType.SYMBOL:
+        if not new_node._left or not new_node._right:
+            return None, pos
+    return new_node, pos
+
+
+def generate_expression_tree(text: str) -> TreeNode | None:
     tree, position = _tree_node(text, 0)
+    print(f"tree: {tree}\nposition: {position}")
     if position == len(text):
         return tree
     return None
@@ -74,5 +105,5 @@ def infix_expression_tree(tree: TreeNode) -> str:
     if tree._item.type == TokenType.SYMBOL:
         return ("(" + infix_expression_tree(tree._left) +
                 " " + tree._item.value +
-                " " +infix_expression_tree(tree._right) + ")")
+                " " + infix_expression_tree(tree._right) + ")")
     return str(tree._item.value)

@@ -3,6 +3,8 @@ from expTree import *
 expression = input("give an expression: ")
 while expression[0] != "!":
     tokentree = generate_expression_tree(expression)
+    print(tokentree)
+    infix_expression_tree(tokentree)
     if tokentree is None:
         print("this is not an infix expression")
     else:
