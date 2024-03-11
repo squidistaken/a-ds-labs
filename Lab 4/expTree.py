@@ -39,7 +39,7 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
     Creates a tree.
     :param text: Given string.
     :param pos: Current position.
-    :return:
+    :return: Tuple of the final tree and last indexed position.
     """
     operators = []
     nodes = []
@@ -125,6 +125,11 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
 
 
 def generate_expression_tree(text: str) -> TreeNode | None:
+    """
+    Generates an expression tree.
+    :param text: Text.
+    :return: Expression tree represented as a TreeNode.
+    """
     if text == "":
         return None
     if is_operator(text[0]):
