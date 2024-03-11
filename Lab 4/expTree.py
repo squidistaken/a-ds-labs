@@ -27,7 +27,6 @@ def _create_subtree(operators: list, nodes: list):
     Creates a subtree and stores in the nodes list.
     :param operators: Operators list.
     :param nodes: Nodes list.
-    :return:
     """
     new_node = operators.pop()
     new_node._right = nodes.pop()
@@ -48,8 +47,10 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
     prev = None
 
     while pos < len(text):
+        # Increment position if there is a space character AND we are not reaching the end of the text.
         if pos < len(text) and text[pos].isspace():
             pos += 1
+        # If there is a number.
         elif "0" <= text[pos] <= "9":
             if prev != TokenType.SYMBOL and prev is not None:
                 return None, pos
@@ -58,10 +59,10 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
             new_node = TreeNode(Token(TokenType.NUMBER, value))
             nodes.append(new_node)
             prev = TokenType.NUMBER
+        # If there is an alphabetical character - an identifier.
         elif text[pos].isalpha():
             if prev != TokenType.SYMBOL and prev is not None:
                 return None, pos
-            # An alphabetic character signals an identifier
             identifier, pos = _match_identifier(text, pos)
             new_node = TreeNode(Token(TokenType.IDENTIFIER, identifier))
             nodes.append(new_node)
@@ -70,14 +71,18 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
             # In all other cases, it is a symbol
             prev = TokenType.SYMBOL
             symbol, pos = _match_symbol(text, pos)
+            # Validate for correct symbols.
             if symbol not in "*/+-()":
                 return None, pos
             root_node = TreeNode(Token(TokenType.SYMBOL, symbol))
 
+            # If we encounter our first operator, we shouldn't need to do much.
             if len(operators) == 0:
                 operators.append(root_node)
+            # Opening bracket
             elif symbol == "(":
                 operators.append(root_node)
+            # +-
             elif symbol in "+-":
                 while len(operators) and operators[-1]._item.value in "*/+-":
                     if len(nodes) == 0 or len(nodes) == 1:
@@ -86,6 +91,7 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
                     if len(operators) == 0:
                         break
                 operators.append(root_node)
+            # */
             elif symbol in "*/":
                 while len(operators) and operators[-1]._item.value in "*/":
                     if len(nodes) == 0 or len(nodes) == 1:
@@ -94,6 +100,7 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
                     if len(operators) == 0:
                         break
                 operators.append(root_node)
+            # Closing bracket.
             elif symbol == ")":
                 while len(operators) and operators[-1]._item.value != "(":
                     if len(nodes) == 0 or len(nodes) == 1:
@@ -105,6 +112,7 @@ def _tree_node(text: str, pos: int) -> tuple[TreeNode | None, int]:
                     return None, pos
                 operators.pop()
 
+    # Final validation in constructing the tree.
     while len(operators) != 0:
         new_node = operators.pop()
         if len(nodes) == 0 or len(nodes) == 1:
@@ -120,8 +128,6 @@ def generate_expression_tree(text: str) -> TreeNode | None:
     if text == "":
         return None
     if is_operator(text[0]):
-        return None
-    if text in "()":
         return None
     tree, position = _tree_node(text, 0)
     if position == len(text):
