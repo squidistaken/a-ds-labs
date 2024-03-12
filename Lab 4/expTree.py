@@ -130,6 +130,7 @@ def generate_expression_tree(text: str) -> TreeNode | None:
     :param text: Text.
     :return: Expression tree represented as a TreeNode.
     """
+
     if text == "":
         return None
     if is_operator(text[0]):
@@ -164,6 +165,7 @@ def evaluate_expression_tree(tree: TreeNode) -> float:
             return left_operand + right_operand
 
 
+# Moved this function to tree.py file. But it needs to stay here to be used by expTree_test.py in Themis
 def infix_expression_tree(tree: TreeNode) -> str:
     if tree is None:
         return "!"
@@ -177,7 +179,7 @@ def infix_expression_tree(tree: TreeNode) -> str:
 # Part 2
 # Question 1
 
-def simplify_expression_tree(tree: TreeNode) -> TreeNode:
+def simplify(tree: TreeNode) -> TreeNode:
     def simplify_node(node: TreeNode) -> [TreeNode, bool]:
         """
         Simplify expression
@@ -201,7 +203,6 @@ def simplify_expression_tree(tree: TreeNode) -> TreeNode:
             # If either of the children are 0 replace node with 0
             if node._left._item.value == 0 or node._right._item.value == 0:
                 return TreeNode(Token(TokenType.NUMBER, 0)), True
-
             # If either of the children are 1 replace node with the other child
             if node._left._item.value == 1:
                 return node._right, True
@@ -233,3 +234,58 @@ def simplify_expression_tree(tree: TreeNode) -> TreeNode:
         simplified, changed = simplify_node(simplified)
 
     return simplified
+
+
+# Question 2
+
+def differentiate(tree: TreeNode, identifier: str) -> TreeNode:
+    if tree._item.type == TokenType.NUMBER:  # Base case: number
+        return TreeNode(Token(TokenType.NUMBER, 0))
+    elif tree._item.type == TokenType.IDENTIFIER:  # Base case: identifier
+        if tree._item.value != identifier:  # If id not "x" return 0
+            return TreeNode(Token(TokenType.NUMBER, 0))
+        return TreeNode(Token(TokenType.NUMBER, 1))
+    else:  # Else it's a symbol and needs some formula
+        if tree._item.value == "*":
+            # d(E1 ∗ E2)/dx = (dE1/dx) ∗ E2 + E1 ∗ (dE2/dx)
+            left_diff = differentiate(tree._left, identifier)       # (dE1 / dx)
+            right_diff = differentiate(tree._right, identifier)     # (dE2 / dx)
+            left = tree._left.__copy__()                # E1
+            right = tree._right.__copy__()              # E2
+
+            # Creates a string from the differentiated branches
+            new_exp = (f"({infix_expression_tree(left_diff)} * {infix_expression_tree(right)} "
+                       f"+ {infix_expression_tree(left)} * {infix_expression_tree(right_diff)})")
+            # Uses created string to generate a new tree
+            new_tree = generate_expression_tree(new_exp)
+            # Returns the simplified tree
+            return simplify(new_tree)
+
+        elif tree._item.value == "/":
+            # d(E1 / E2) / dx = ((dE1 / dx) ∗ E2 − E1 ∗ (dE2 / dx)) / (E2 ∗ E2)
+            left_diff = differentiate(tree._left, identifier)       # (dE1 / dx)
+            right_diff = differentiate(tree._right, identifier)     # (dE2 / dx)
+            left = tree._left.__copy__()                # E1
+            right = tree._right.__copy__()              # E2
+
+            # Basically just a copy of: ((dE1 / dx) ∗ E2 − E1 ∗ (dE2 / dx)) / (E2 ∗ E2)
+            new_exp = (f"(({infix_expression_tree(left_diff)} * {infix_expression_tree(right)} "
+                       f"- {infix_expression_tree(left)} * {infix_expression_tree(right_diff)}) "
+                       f"/ ({infix_expression_tree(right)} * {infix_expression_tree(right)}))")
+
+            new_tree = generate_expression_tree(new_exp)
+            return simplify(new_tree)
+
+        elif tree._item.value == "+":
+            left_diff = differentiate(tree._left, identifier)
+            right_diff = differentiate(tree._right, identifier)
+
+            new_exp = f"{infix_expression_tree(left_diff)} + {infix_expression_tree(right_diff)}"
+            return generate_expression_tree(new_exp)
+        elif tree._item.value == "-":
+            left_diff = differentiate(tree._left, identifier)
+            right_diff = differentiate(tree._right, identifier)
+
+            new_exp = f"{infix_expression_tree(left_diff)} - {infix_expression_tree(right_diff)}"
+            return generate_expression_tree(new_exp)
+    return tree

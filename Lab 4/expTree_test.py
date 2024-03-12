@@ -9,7 +9,7 @@ while expression[0] != "!":
         print("expression:", end=" ")
         print(infix_expression_tree(tokentree))
 
-        tree = simplify_expression_tree(tokentree)
+        tree = simplify(tokentree)
         print("simplified expression:", end=" ")
         print(infix_expression_tree(tree))
 
@@ -18,5 +18,8 @@ while expression[0] != "!":
             print(evaluate_expression_tree(tokentree))
         else:
             print("this is not a numerical infix expression")
+            tree = simplify(differentiate(tree))
+            print("differentiated expression:", end=" ")
+            print(infix_expression_tree(tree))
     expression = input("\ngive an expression: ")
 print("good bye")
