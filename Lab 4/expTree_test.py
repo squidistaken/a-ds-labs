@@ -8,6 +8,11 @@ while expression[0] != "!":
     else:
         print("expression:", end=" ")
         print(infix_expression_tree(tokentree))
+
+        tree = simplify_expression_tree(tokentree)
+        print("simplified expression:", end=" ")
+        print(infix_expression_tree(tree))
+
         if is_numerical_expression_tree(tokentree):
             print("the value of this expression is:", end=" ")
             print(evaluate_expression_tree(tokentree))

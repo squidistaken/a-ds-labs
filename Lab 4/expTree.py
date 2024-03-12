@@ -172,3 +172,64 @@ def infix_expression_tree(tree: TreeNode) -> str:
                 " " + tree._item.value +
                 " " + infix_expression_tree(tree._right) + ")")
     return str(tree._item.value)
+
+
+# Part 2
+# Question 1
+
+def simplify_expression_tree(tree: TreeNode) -> TreeNode:
+    def simplify_node(node: TreeNode) -> [TreeNode, bool]:
+        """
+        Simplify expression
+        (0 ∗ E) and (E ∗ 0) are simplified to 0;
+        (0 + E), (E + 0), (E − 0), (1 ∗ E), (E ∗ 1) and (E / 1) are simplified to E.
+        :param node: expression tree you want to simplify
+        :return: simplified expression tree
+        """
+
+        # Base case: if the node is not a symbol return the current node
+        if node._item.type != TokenType.SYMBOL:
+            return node, False
+
+        # Need to check whether anything changed in the tree.
+        changed = False
+        node._left, left_changed = simplify_node(node._left)
+        node._right, right_changed = simplify_node(node._right)
+        changed = left_changed or right_changed
+
+        if node._item.value == "*":
+            # If either of the children are 0 replace node with 0
+            if node._left._item.value == 0 or node._right._item.value == 0:
+                return TreeNode(Token(TokenType.NUMBER, 0)), True
+
+            # If either of the children are 1 replace node with the other child
+            if node._left._item.value == 1:
+                return node._right, True
+            # Vice versa for the right node
+            elif node._right._item.value == 1:
+                return node._left, True
+        elif node._item.value == "+":
+            # If the left node is 0 and adds another number or identifier replace node with right child
+            if node._left._item.value == 0:
+                return node._right, True
+            # Vice versa for the right node
+            if node._right._item.value == 0:
+                return node._left, True
+        elif node._item.value == "/":
+            # Division by 1: replace node with left child
+            if node._right._item.value == 1:
+                return node._left, True
+        elif node._item.value == "-":
+            # Subtraction of 0: replace node with left child
+            if node._right._item.value == 0:
+                return node._left, True
+
+        # return node if nothing changed.
+        return node, changed
+
+    simplified, changed = simplify_node(tree)
+    # While there has been a change in the tree; simplify again till no simplifications are left
+    while changed:
+        simplified, changed = simplify_node(simplified)
+
+    return simplified
