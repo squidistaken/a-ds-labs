@@ -1,9 +1,10 @@
 """
-File:   tree.py
+File: tree.py
 Author: Harmen de Weerd (harmen.de.weerd@rug.nl)
+Contributor: Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
 
 Description:
-    Implements a tree in node representation
+    Implements a tree in node representation. Modified by Marinus van den Ende (m.van.den.ende.1@student.rug.nl).
 """
 
 
