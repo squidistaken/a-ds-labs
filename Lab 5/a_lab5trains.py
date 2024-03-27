@@ -78,11 +78,11 @@ def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> (list[in
 
     while p_queue.size():
         min_dist, node = p_queue.remove_min()
+        # Signal that we've reached the end.
+        if node == end:
+            return shortest_path, dist[node]
 
         for e in graph._neighbours[node]:
-            # Signal that we've reached the end.
-            if node == end:
-                return shortest_path, dist[node]
             # In our undirected graph, we do not add two pathways twice, so destination/origin are interchangeable.
             vertex = e._destination if e._destination != node else e._origin
             weight = e._weight
