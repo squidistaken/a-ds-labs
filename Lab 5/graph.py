@@ -25,7 +25,14 @@ class UndirectedGraph:
     def __init__(self, node_count: int) -> None:
         self._neighbours = [[] for _ in range(node_count)]
 
+    def __getitem__(self, node: int):
+        return self._neighbours[node]
+
     def add_edge(self, node1: int, node2: int, weight: int = 1):
         new_edge = GraphEdge(node1, node2, weight)
         self._neighbours[node1].append(new_edge)
         self._neighbours[node2].append(new_edge)
+
+    def size(self) -> int:
+        return len(self._neighbours)
+
