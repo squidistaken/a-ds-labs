@@ -1,5 +1,5 @@
 """
-File: lab5trains.py
+File: a_lab5trains.py
 Authors: Marcus Persson (m.h.o.persson@student.rug.nl), Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
 
 Description:
@@ -7,7 +7,8 @@ Description:
     that route, including the starting and ending station, as well as the total time the connection will take.
 """
 from graph import UndirectedGraph
-from heap import Heap
+from minheap import MinHeap
+import csv
 
 
 def create_network(banned: list[tuple]) -> (UndirectedGraph, list):
@@ -17,20 +18,20 @@ def create_network(banned: list[tuple]) -> (UndirectedGraph, list):
     :param banned: A list of tuples of banned connections.
     :return: A tuple of the network and list of all stations.
     """
-    file = open("connections.txt", "r")
     connections = []
     cities = []
-    line = file.readline().strip("\n").split(",")
 
-    while line != [""]:
-        if (line[0], line[1]) not in banned:
-            if line[0] not in cities:
-                cities.append(line[0])
-            if line[1] not in cities:
-                cities.append(line[1])
+    with open("connections.csv") as f:
+        reader = csv.reader(f)
+        for line in reader:
+            if (line[0], line[1]) not in banned:
+                if line[0] not in cities:
+                    cities.append(line[0])
+                if line[1] not in cities:
+                    cities.append(line[1])
 
-            connections.append((cities.index(line[0]), cities.index(line[1]), int(line[2])))
-        line = file.readline().strip("\n").split(",")
+                # (Origin, Destination, Distance)
+                connections.append((cities.index(line[0]), cities.index(line[1]), int(line[2])))
 
     network = UndirectedGraph(len(cities))
 
@@ -54,7 +55,8 @@ network, cities = create_network(banned_connections)
 
 def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> (list[int], int):
     """
-    Returns the shortest path in an undirected graph from a start node and end node.
+    Returns the shortest path in an undirected graph from a start node and end node,
+    using a modified Dijkstra's algorithm.
     :param graph: UndirectedGraph class.
     :param start: Starting node.
     :param end: Ending node.
@@ -64,34 +66,33 @@ def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> (list[in
     if start == end:
         return [start, end], 0
 
-    # Implements a priority queue as a Heap.
-    p_queue = Heap()
+    # Implements a priority queue as a MinHeap.
+    p_queue = MinHeap()
     p_queue.enqueue((0, start))
-    # TODO: Create a correct path
-    # shortest_path = []
+    # TODO: Create a correct shortest path
+    shortest_path = [start, end]
 
     # We create a list of (minimum) distances from the start node.
     dist = [float('inf')] * graph.size()
     dist[start] = 0
 
     while p_queue.size():
-        min_dist, node = p_queue.remove_max()
+        min_dist, node = p_queue.remove_min()
 
         for e in graph._neighbours[node]:
+            # Signal that we've reached the end.
+            if node == end:
+                return shortest_path, dist[node]
             # In our undirected graph, we do not add two pathways twice, so destination/origin are interchangeable.
             vertex = e._destination if e._destination != node else e._origin
             weight = e._weight
             if dist[vertex] > dist[node] + weight:
-                # if node not in shortest_path:
-                # shortest_path.append(node)
                 dist[vertex] = dist[node] + weight
                 p_queue.enqueue((dist[vertex], vertex))
+                if node not in shortest_path:
+                    shortest_path.insert(-1, node)
 
-        # Signal that we've reached the end.
-        if node == end:
-            return [start, end], dist[node]
-
-    # If our while loop ends, that means there is no possible path.
+    # If our loop ends, that means there is no possible path.
     return None, None
 
 
@@ -104,9 +105,7 @@ while start != "!":
     if start not in cities or end not in cities:
         print("UNREACHABLE")
     else:
-        journey, distance = find_shortest_path(network,
-                                               cities.index(start),
-                                               cities.index(end))
+        journey, distance = find_shortest_path(network, cities.index(start), cities.index(end))
         if distance is None:
             print("UNREACHABLE")
         else:

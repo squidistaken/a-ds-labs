@@ -1,18 +1,27 @@
-class Heap:
+"""
+File: minheap.py
+Authors: Marcus Persson (m.h.o.persson@student.rug.nl), Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
+
+Description:
+    This program is a class implementation of a MinHeap, in which the root node is the lowest value,
+    and lower nodes/leaf nodes are higher values.
+"""
+
+
+class MinHeap:
     def __init__(self):
         self._heap = [0]
 
     def size(self) -> int:
         return len(self._heap) - 1
 
-    def _heap_empty_error(self) -> None:
+    def _heap_empty_error(self):
         print("Heap empty")
 
-    # Exercise 3.10
     def _upheap(self, index: int) -> None:
         if index > 1:
             parent_index = index // 2
-            if self._heap[parent_index] < self._heap[index]:
+            if self._heap[parent_index] > self._heap[index]:
                 self._heap[parent_index], self._heap[index] = self._heap[index], self._heap[parent_index]
                 self._upheap(parent_index)
 
@@ -20,7 +29,6 @@ class Heap:
         self._heap.append(value)
         self._upheap(self.size())
 
-    # Exercise 3.11
     def _downheap(self, index: int) -> None:
         lc = index * 2
         rc = lc + 1
@@ -34,14 +42,14 @@ class Heap:
             else:
                 right_child = left_child
 
-            if left_child > value and left_child >= right_child:
+            if left_child < value and left_child <= right_child:
                 self._heap[lc], self._heap[index] = self._heap[index], self._heap[lc]
                 self._downheap(lc)
-            elif right_child > value:
+            elif right_child < value:
                 self._heap[rc], self._heap[index] = self._heap[index], self._heap[rc]
                 self._downheap(rc)
 
-    def remove_max(self):
+    def remove_min(self):
         return_value = self._heap[1]
         if self.size() > 1:
             self._heap[1] = self._heap.pop()
