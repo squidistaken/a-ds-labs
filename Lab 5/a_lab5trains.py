@@ -70,17 +70,15 @@ def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> (list[in
     p_queue = MinHeap()
     p_queue.enqueue((0, start))
     # TODO: Create a correct shortest path
-    shortest_path = [start, end]
+    pathway = [end]
 
+    parent_of = [None] * graph.size()
     # We create a list of (minimum) distances from the start node.
-    dist = [float('inf')] * graph.size()
+    dist = [float("inf")] * graph.size()
     dist[start] = 0
 
     while p_queue.size():
         min_dist, node = p_queue.remove_min()
-        # Signal that we've reached the end.
-        if node == end:
-            return shortest_path, dist[node]
 
         for e in graph._neighbours[node]:
             # In our undirected graph, we do not add two pathways twice, so destination/origin are interchangeable.
@@ -89,11 +87,18 @@ def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> (list[in
             if dist[vertex] > dist[node] + weight:
                 dist[vertex] = dist[node] + weight
                 p_queue.enqueue((dist[vertex], vertex))
-                if node not in shortest_path:
-                    shortest_path.insert(-1, node)
+                parent_of[vertex] = node
 
-    # If our loop ends, that means there is no possible path.
-    return None, None
+    if parent_of[end] is None:
+        # If there is no parent, that means there is no possible path.
+        return None, None
+
+    parent = parent_of[end]
+    while parent is not None:
+        pathway.append(parent)
+        parent = parent_of[parent]
+    pathway.reverse()
+    return pathway, dist[end]
 
 
 # Input: Queries, in which each query consists of a tuple regarding a start and end.
