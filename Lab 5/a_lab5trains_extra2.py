@@ -1,5 +1,5 @@
 """
-File: a_lab5trains.py
+File: a_lab5trains_extra2.py
 Authors:
     Marcus Persson (m.h.o.persson@student.rug.nl)
     Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
@@ -70,6 +70,7 @@ class TrainNetwork:
     """
     This class represents a train network, represented as an UndirectedGraph.
     """
+
     def __init__(self):
         _station_count = int(input())
         self.stations = [None] * _station_count
@@ -87,14 +88,20 @@ class TrainNetwork:
         while len(self._disruptions) < _disruption_count:
             self._disruptions.append((input(), input()))
 
-        self.network = self._create_network(self.stations, self._connections, self._disruptions)
+        self.network = self._create_network(self.stations,
+                                            self._connections,
+                                            self._disruptions)
 
-    def _create_network(self, stations: list, connections: list, disruptions: list) -> (UndirectedGraph, list):
+    def _create_network(self, stations: list, connections: list,
+                        disruptions: list) -> (UndirectedGraph, list):
         network = UndirectedGraph(len(stations))
 
         for i in range(len(connections)):
-            if (stations[int(connections[i][0])], stations[int(connections[i][1])]) not in disruptions:
-                network.add_edge(int(connections[i][0]), int(connections[i][1]), int(connections[i][2]))
+            if (stations[int(connections[i][0])],
+                stations[int(connections[i][1])]) not in disruptions:
+                network.add_edge(int(connections[i][0]),
+                                 int(connections[i][1]),
+                                 int(connections[i][2]))
 
         return network
 
@@ -110,9 +117,10 @@ for i in range(network_count):
         if start not in networks[i].stations or end not in networks[i].stations:
             print("UNREACHABLE")
         else:
-            journey, distance = find_shortest_path(networks[i].network,
-                                                               networks[i].stations.index(start),
-                                                               networks[i].stations.index(end))
+            journey, distance = (
+                find_shortest_path(networks[i].network,
+                                   networks[i].stations.index(start),
+                                   networks[i].stations.index(end)))
 
             if distance is None:
                 print("UNREACHABLE")

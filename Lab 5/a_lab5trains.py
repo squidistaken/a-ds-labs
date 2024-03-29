@@ -29,7 +29,7 @@ def create_network(banned: list[tuple]) -> (UndirectedGraph, list):
     with open("connections.csv") as f:
         reader = csv.reader(f)
         for line in reader:
-            if (line[0], line[1]) not in banned:
+            if (line[0], line[1]) not in banned and (line[1], line[0]) not in banned:
                 if line[0] not in cities:
                     cities.append(line[0])
                 if line[1] not in cities:
