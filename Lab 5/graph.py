@@ -1,10 +1,14 @@
 """
 File: graph.py
-Authors: Marcus Persson (m.h.o.persson@student.rug.nl), Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
+Authors:
+    Marcus Persson (m.h.o.persson@student.rug.nl)
+    Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
 
 Description:
-    This program creates an UndirectedGraph class, based off the one taught in the lecture and reader.
+    This program creates an UndirectedGraph class, based off the one taught
+    in the lecture and reader.
 """
+
 
 class GraphEdge:
     def __init__(self, origin, destination, weight: float = 1.0):
@@ -18,6 +22,7 @@ class GraphEdge:
     def other_node(self, node: int) -> int:
         if self.is_incident(node):
             return self._origin + self._destination - node - node
+
         return -1
 
 
@@ -35,4 +40,3 @@ class UndirectedGraph:
 
     def size(self) -> int:
         return len(self._neighbours)
-

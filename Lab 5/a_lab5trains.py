@@ -1,10 +1,13 @@
 """
 File: a_lab5trains.py
-Authors: Marcus Persson (m.h.o.persson@student.rug.nl), Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
+Authors:
+    Marcus Persson (m.h.o.persson@student.rug.nl)
+    Marinus van den Ende (m.van.den.ende.1@student.rug.nl)
 
 Description:
-    This program uses Dijkstra’s Algorithm to find the fastest connection and output the list of all stations along
-    that route, including the starting and ending station, as well as the total time the connection will take.
+    This program uses Dijkstra’s Algorithm to find the fastest connection
+    and output the list of all stations along that route, including the
+    starting and ending station, as well as the total time the connection will take.
 """
 from graph import UndirectedGraph
 from minheap import MinHeap
@@ -13,8 +16,9 @@ import csv
 
 def create_network(banned: list[tuple]) -> (UndirectedGraph, list):
     """
-    Returns a heap of all connected stations and their distances, in which each node is a dictionary with a
-    key tuple (station1, station2) and value distance.
+    Returns a heap of all connected stations and their distances, in which
+    each node is a dictionary with a key tuple (station1, station2) and
+    value distance.
     :param banned: A list of tuples of banned connections.
     :return: A tuple of the network and list of all stations.
     """
@@ -31,7 +35,9 @@ def create_network(banned: list[tuple]) -> (UndirectedGraph, list):
                     cities.append(line[1])
 
                 # (Origin, Destination, Distance)
-                connections.append((cities.index(line[0]), cities.index(line[1]), int(line[2])))
+                connections.append((cities.index(line[0]),
+                                    cities.index(line[1]),
+                                    int(line[2])))
 
     network = UndirectedGraph(len(cities))
 
@@ -44,7 +50,8 @@ def create_network(banned: list[tuple]) -> (UndirectedGraph, list):
 # Input: n current disruptions.
 disruptions = int(input())
 
-# Input: n many disruptions, in which each disruption consists of a tuple regarding a direct connection.
+# Input: n many disruptions, in which each disruption consists of a tuple
+#        regarding a direct connection.
 banned_connections = []
 for i in range(disruptions):
     connection = (input(), input())
@@ -53,14 +60,16 @@ for i in range(disruptions):
 network, cities = create_network(banned_connections)
 
 
-def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> (list[int], int):
+def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> \
+        (list[int], int):
     """
-    Returns the shortest path in an undirected graph from a start node and end node,
-    using a modified Dijkstra's algorithm.
+    Returns the shortest path in an undirected graph from a start node and
+    end node, using Dijkstra's algorithm.
     :param graph: UndirectedGraph class.
     :param start: Starting node.
     :param end: Ending node.
-    :return: Tuple of the shortest possible path, represented as a list of points, and the minimum distance.
+    :return: Tuple of the shortest possible path, represented as a list of
+             points, and the minimum distance.
     """
     # Accounts for if we put in the same two nodes.
     if start == end:
@@ -81,7 +90,8 @@ def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> (list[in
         min_dist, node = p_queue.remove_min()
 
         for e in graph._neighbours[node]:
-            # In our undirected graph, we do not add two pathways twice, so destination/origin are interchangeable.
+            # In our undirected graph, we do not add two pathways twice, so
+            # destination/origin are interchangeable.
             vertex = e._destination if e._destination != node else e._origin
             weight = e._weight
             if dist[vertex] > dist[node] + weight:
@@ -101,8 +111,8 @@ def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> (list[in
     return pathway, dist[end]
 
 
-# Input: Queries, in which each query consists of a tuple regarding a start and end.
-# Program ends when either input == "!".
+# Input: Queries, in which each query consists of a tuple regarding a start
+#        and end.
 start = input()
 
 while start != "!":
@@ -110,7 +120,9 @@ while start != "!":
     if start not in cities or end not in cities:
         print("UNREACHABLE")
     else:
-        journey, distance = find_shortest_path(network, cities.index(start), cities.index(end))
+        journey, distance = find_shortest_path(network,
+                                               cities.index(start),
+                                               cities.index(end))
         if distance is None:
             print("UNREACHABLE")
         else:
