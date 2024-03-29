@@ -4,3 +4,4 @@ An amalgamation of the wonderous coding artworks from Marcus and Marinus.
 2. [Lab 2: Solving Equations](Lab%202)
 3. [Lab 3: Spell Checker](Lab%203)
 4. [Lab 4: Expression Trees](Lab%204)
+5. [Lab 5: Trains in the Storm](Lab%205)
