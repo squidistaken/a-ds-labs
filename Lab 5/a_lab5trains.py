@@ -17,9 +17,9 @@ import csv
 
 def create_network(banned: list[tuple]) -> (UndirectedGraph, list):
     """
-    Returns a heap of all connected stations and their distances, in which
-    each node is a dictionary with a key tuple (station1, station2) and
-    value distance.
+    Returns an UndirectedGraph of all connected stations and their distances,
+    in which each node is a dictionary with a key tuple (station1, station2)
+    and value distance.
     :param banned: A list of tuples of banned connections.
     :return: A tuple of the network and list of all stations.
     """
