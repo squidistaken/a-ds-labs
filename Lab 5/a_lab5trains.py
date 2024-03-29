@@ -7,7 +7,8 @@ Authors:
 Description:
     This program uses Dijkstra’s Algorithm to find the fastest connection
     and output the list of all stations along that route, including the
-    starting and ending station, as well as the total time the connection will take.
+    starting and ending station, as well as the total time the connection
+    will take.
 """
 from graph import UndirectedGraph
 from minheap import MinHeap
@@ -78,13 +79,13 @@ def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> \
     # Implements a priority queue as a MinHeap.
     p_queue = MinHeap()
     p_queue.enqueue((0, start))
-    # TODO: Create a correct shortest path
-    pathway = [end]
 
-    parent_of = [None] * graph.size()
     # We create a list of (minimum) distances from the start node.
     dist = [float("inf")] * graph.size()
     dist[start] = 0
+
+    # We create a reference list of nodes' parent nodes
+    parent_of = [None] * graph.size()
 
     while p_queue.size():
         min_dist, node = p_queue.remove_min()
@@ -103,11 +104,15 @@ def find_shortest_path(graph: UndirectedGraph, start: int, end: int) -> \
         # If there is no parent, that means there is no possible path.
         return None, None
 
+    pathway = [end]
     parent = parent_of[end]
+
     while parent is not None:
         pathway.append(parent)
         parent = parent_of[parent]
+
     pathway.reverse()
+
     return pathway, dist[end]
 
 
